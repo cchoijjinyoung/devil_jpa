@@ -5,7 +5,7 @@ import lombok.ToString;
 
 @Getter
 @ToString
-public class BoardCreate {
+public class PostCreate {
 
     private String title;
 

@@ -6,19 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MockMvcBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import javax.persistence.DiscriminatorValue;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @WebMvcTest
 class PostControllerTest {
@@ -31,9 +22,9 @@ class PostControllerTest {
     void test1() throws Exception {
         mockMvc.perform(post("/posts")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"title\": \"제목입니다\", \"content\": \"내용입니다.\"}")
+                        .content("{\"title\": \"\", \"content\": \"내용입니다.\"}")
                 )
-                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.title").value("타이틀을 입력해주세요."))
                     .andDo(print());
     }
 }

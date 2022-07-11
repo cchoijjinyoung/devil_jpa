@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest
 class PostControllerTest {
@@ -22,9 +23,10 @@ class PostControllerTest {
     void test1() throws Exception {
         mockMvc.perform(post("/posts")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"title\": \"\", \"content\": \"내용입니다.\"}")
+                        .content("{\"title\": null, \"content\": \"내용입니다.\"}")
                 )
-                    .andExpect(jsonPath("$.title").value("타이틀을 입력해주세요."))
-                    .andDo(print());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("타이틀을 입력해주세요."))
+                .andDo(print());
     }
 }

@@ -18,7 +18,7 @@ public class PostController {
      * 게시글 등록
      */
     @PostMapping("/posts")
-    public Map<String, String> create(@RequestBody @Valid PostCreate params) {
+    public Map<String, String> create(@RequestBody @Valid PostCreate request) {
         return Map.of();
     }
 }

@@ -2,6 +2,8 @@ package com.devil.api.controller;
 
 import com.devil.api.domain.Post;
 import com.devil.api.repository.PostRepository;
+import com.devil.api.request.PostCreate;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,6 +24,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class PostControllerTest {
 
     @Autowired
+    ObjectMapper objectMapper;
+    @Autowired
     private MockMvc mockMvc;
 
     @Autowired
@@ -35,9 +39,14 @@ class PostControllerTest {
     @Test
     @DisplayName("/posts 요청 시 title값은 필수다.")
     void test1() throws Exception {
+        PostCreate request = PostCreate.builder()
+                .title("")
+                .content("내용입니다.")
+                .build();
+        String json = objectMapper.writeValueAsString(request);
         mockMvc.perform(post("/posts")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"title\": null, \"content\": \"내용입니다.\"}")
+                        .content(json)
                 )
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("400"))
@@ -49,9 +58,14 @@ class PostControllerTest {
     @Test
     @DisplayName("/posts 요청 시 DB에 저장된다.")
     void test2() throws Exception {
+        PostCreate request = PostCreate.builder()
+                .title("제목입니다.")
+                .content("내용입니다.")
+                .build();
+        String json = objectMapper.writeValueAsString(request);
         mockMvc.perform(post("/posts")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"title\": \"제목입니다.\", \"content\": \"내용입니다.\"}")
+                        .content(json)
                 )
                 .andExpect(status().isOk())
                 .andDo(print());

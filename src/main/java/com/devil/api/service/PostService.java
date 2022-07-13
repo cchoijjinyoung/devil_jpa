@@ -3,6 +3,7 @@ package com.devil.api.service;
 import com.devil.api.domain.Post;
 import com.devil.api.repository.PostRepository;
 import com.devil.api.request.PostCreate;
+import com.devil.api.response.PostResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,9 +24,16 @@ public class PostService {
         postRepository.save(post);
     }
 
-    public Post get(Long postId) {
+    public PostResponse get(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 글입니다."));
-        return post;
+        PostResponse response = PostResponse.builder()
+                .id(post.getId())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .build();
+        // Post를 PostResponse로 감싸는 작업이 Service에서 하는게 맞느냐? 하는 얘기도 있다.
+        // Service를 두 개로 나눠서 구분해주는 것도 좋은 방법이다.
+        return response;
     }
 }

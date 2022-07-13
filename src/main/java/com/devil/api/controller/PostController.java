@@ -2,6 +2,7 @@ package com.devil.api.controller;
 
 import com.devil.api.domain.Post;
 import com.devil.api.request.PostCreate;
+import com.devil.api.response.PostResponse;
 import com.devil.api.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,8 +24,14 @@ public class PostController {
     }
 
     @GetMapping("/posts/{postId}")
-    public Post get(@PathVariable(name = "postId") Long id) {
+    public PostResponse get(@PathVariable(name = "postId") Long id) {
         Post post = postService.get(id);
-        return post;
+
+        PostResponse response = PostResponse.builder()
+                .id(post.getId())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .build();
+        return response;
     }
 }

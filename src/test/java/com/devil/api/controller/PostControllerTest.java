@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -38,7 +39,7 @@ class PostControllerTest {
 
     @Test
     @DisplayName("/posts 요청 시 title값은 필수다.")
-    void test1() throws Exception {
+    void validation() throws Exception {
         PostCreate request = PostCreate.builder()
                 .title("")
                 .content("내용입니다.")
@@ -57,7 +58,7 @@ class PostControllerTest {
 
     @Test
     @DisplayName("/posts 요청 시 DB에 저장된다.")
-    void test2() throws Exception {
+    void savePost() throws Exception {
         PostCreate request = PostCreate.builder()
                 .title("제목입니다.")
                 .content("내용입니다.")
@@ -74,5 +75,22 @@ class PostControllerTest {
         Post post = postRepository.findAll().get(0);
         assertEquals("제목입니다.", post.getTitle());
         assertEquals("내용입니다.", post.getContent());
+    }
+
+    @Test
+    @DisplayName("글 1개 조회")
+    void getPost() throws Exception {
+        Post post = Post.builder()
+                .title("제목입니다.")
+                .content("내용입니다.")
+                .build();
+        postRepository.save(post);
+        mockMvc.perform(get("/posts/{postId}", post.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(post.getId()))
+                .andExpect(jsonPath("$.title").value("제목입니다."))
+                .andExpect(jsonPath("$.content").value("내용입니다."))
+                .andDo(print());
     }
 }

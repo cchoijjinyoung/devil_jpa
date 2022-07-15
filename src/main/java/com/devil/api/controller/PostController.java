@@ -1,6 +1,5 @@
 package com.devil.api.controller;
 
-import com.devil.api.domain.Post;
 import com.devil.api.request.PostCreate;
 import com.devil.api.response.PostResponse;
 import com.devil.api.service.PostService;
@@ -24,14 +23,7 @@ public class PostController {
     }
 
     @GetMapping("/posts/{postId}")
-    public PostResponse get(@PathVariable(name = "postId") Long id) {
-        Post post = postService.get(id);
-
-        PostResponse response = PostResponse.builder()
-                .id(post.getId())
-                .title(post.getTitle())
-                .content(post.getContent())
-                .build();
-        return response;
+    public PostResponse get(@PathVariable Long postId) {
+        return postService.get(postId);
     }
 }

@@ -3,6 +3,7 @@ package com.devil.api.service;
 import com.devil.api.domain.Post;
 import com.devil.api.repository.PostRepository;
 import com.devil.api.request.PostCreate;
+import com.devil.api.response.PostResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,13 +45,13 @@ class PostServiceTest {
     @Test
     @DisplayName("글 1개 조회")
     void test2() throws Exception {
-        PostCreate postCreate = PostCreate.builder()
+        Post requestPost = Post.builder()
                 .title("제목입니다.")
                 .content("내용입니다.")
                 .build();
-        postService.write(postCreate);
-        Post post = postService.get(postRepository.findAll().get(0).getId());
-        assertEquals("제목입니다.", post.getTitle());
-        assertEquals("내용입니다.", post.getContent());
+        postRepository.save(requestPost);
+        PostResponse response = postService.get(requestPost.getId());
+        assertEquals("제목입니다.", response.getTitle());
+        assertEquals("내용입니다.", response.getContent());
     }
 }

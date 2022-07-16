@@ -115,6 +115,8 @@ class PostControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()", Matchers.is(2)))
                 .andExpect(jsonPath("$[0].id").value(post1.getId()))
+                .andExpect(jsonPath("$[0].title").value("제목1입니다."))
+                .andExpect(jsonPath("$[0].content").value("내용1입니다."))
                 .andDo(print());
     }
 }

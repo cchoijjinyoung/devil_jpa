@@ -110,6 +110,7 @@ class PostControllerTest {
                 .build();
         postRepository.save(post2);
 
+
         mockMvc.perform(get("/posts/")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

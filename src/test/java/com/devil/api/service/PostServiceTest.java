@@ -60,18 +60,16 @@ class PostServiceTest {
     @Test
     @DisplayName("글 여러 개 조회")
     void getListTest() throws Exception {
-        Post requestPost1 = Post.builder()
-                .title("제목1입니다.")
-                .content("내용1입니다.")
-                .build();
-        postRepository.save(requestPost1);
-
-        Post requestPost2 = Post.builder()
-                .title("제목2입니다.")
-                .content("내용2입니다.")
-                .build();
-        postRepository.save(requestPost2);
-
+        postRepository.saveAll(List.of(
+                Post.builder()
+                        .title("제목1입니다.")
+                        .content("내용1입니다.")
+                        .build(),
+                Post.builder()
+                        .title("제목2입니다.")
+                        .content("내용2입니다.")
+                        .build()
+        ));
         List<PostResponse> posts = postService.getList();
         assertEquals(2, posts.size());
         assertEquals("내용1입니다.", posts.get(0).getContent());

@@ -8,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -35,5 +38,15 @@ public class PostService {
         // Post를 PostResponse로 감싸는 작업이 Service에서 하는게 맞느냐? 하는 얘기도 있다.
         // Service를 두 개로 나눠서 구분해주는 것도 좋은 방법이다.
         return response;
+    }
+
+    public List<PostResponse> getList() {
+        return postRepository.findAll().stream()
+                .map(post -> PostResponse.builder()
+                        .id(post.getId())
+                        .title(post.getTitle())
+                        .content(post.getContent())
+                        .build())
+                .collect(Collectors.toList());
     }
 }

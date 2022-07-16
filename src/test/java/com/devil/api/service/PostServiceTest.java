@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
@@ -44,7 +46,7 @@ class PostServiceTest {
 
     @Test
     @DisplayName("글 1개 조회")
-    void test2() throws Exception {
+    void getTest() throws Exception {
         Post requestPost = Post.builder()
                 .title("제목입니다.")
                 .content("내용입니다.")
@@ -53,5 +55,25 @@ class PostServiceTest {
         PostResponse response = postService.get(requestPost.getId());
         assertEquals("제목입니다.", response.getTitle());
         assertEquals("내용입니다.", response.getContent());
+    }
+
+    @Test
+    @DisplayName("글 여러 개 조회")
+    void getListTest() throws Exception {
+        Post requestPost1 = Post.builder()
+                .title("제목1입니다.")
+                .content("내용1입니다.")
+                .build();
+        postRepository.save(requestPost1);
+
+        Post requestPost2 = Post.builder()
+                .title("제목2입니다.")
+                .content("내용2입니다.")
+                .build();
+        postRepository.save(requestPost2);
+
+        List<PostResponse> posts = postService.getList();
+        assertEquals(2, posts.size());
+        assertEquals("내용1입니다.", posts.get(0).getContent());
     }
 }

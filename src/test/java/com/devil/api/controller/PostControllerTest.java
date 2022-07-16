@@ -4,6 +4,7 @@ import com.devil.api.domain.Post;
 import com.devil.api.repository.PostRepository;
 import com.devil.api.request.PostCreate;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -91,6 +92,29 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.id").value(post.getId()))
                 .andExpect(jsonPath("$.title").value("제목입니다."))
                 .andExpect(jsonPath("$.content").value("내용입니다."))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("글 여러 개 조회")
+    void getList() throws Exception {
+        Post post1 = Post.builder()
+                .title("제목1입니다.")
+                .content("내용1입니다.")
+                .build();
+        postRepository.save(post1);
+
+        Post post2 = Post.builder()
+                .title("제목2입니다.")
+                .content("내용2입니다.")
+                .build();
+        postRepository.save(post2);
+
+        mockMvc.perform(get("/posts/")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()", Matchers.is(2)))
+                .andExpect(jsonPath("$[0].id").value(post1.getId()))
                 .andDo(print());
     }
 }
